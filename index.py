@@ -45,41 +45,42 @@ def mover(desafio, movimento):
 
     return novo_desafio
 
-def busca_profundidade(desafio, caminho=[], passos=set(), profundidade=0, limit=20):
+def busca_profundidade(desafio, caminho=[], passos=set(), profundidade=0, limit=20, custo=0):
     if profundidade >= limit:
-        return None, None
+        return None, None, custo
 
     estado = str(desafio)
     if estado in passos:
-        return None, None
+        return None, None, custo
     
     passos.add(estado)
 
 
     if desafio == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]:
-        return caminho, desafio
+        return caminho, desafio, custo
     
     #print("Matriz atual:")
     #gerar_matriz(desafio)  
 
     for movimento in caminhos_possiveis(desafio):
         novo_estado = mover(desafio, movimento)
-        solucao, matriz_final = busca_profundidade(novo_estado, caminho + [movimento], passos, profundidade + 1, limit)
+        solucao, matriz_final, novo_custo = busca_profundidade(novo_estado, caminho + [movimento], passos, profundidade + 1, limit, custo + 1)
         if solucao:
-            return solucao, matriz_final
+            return solucao, matriz_final, novo_custo
 
     passos.remove(estado)
-    return None, None
+    return None, None, custo
 
 matriz_inicial = criando_matriz()
 print("Matriz inicial:")
 gerar_matriz(matriz_inicial)
 
 
-solucao, matriz_resolvida = busca_profundidade(matriz_inicial)
+solucao, matriz_resolvida, novo_custo = busca_profundidade(matriz_inicial)
 if solucao:
     print("\nSolução Encontrada!")
     print("Movimentos:", solucao)
+    print("\nCusto Total:", novo_custo)
     print("\nMatriz Solucionada:")
     gerar_matriz(matriz_resolvida)
 else:
